@@ -1,4 +1,8 @@
+import 'dart:ffi';
+
 import 'package:dynamic_calculators/constants/app_constants.dart';
+import 'package:dynamic_calculators/helper/data_helper.dart';
+import 'package:dynamic_calculators/widgets/show_avarage.dart';
 import 'package:flutter/material.dart';
 
 class CalculatorAvarageApp extends StatefulWidget {
@@ -10,6 +14,7 @@ class CalculatorAvarageApp extends StatefulWidget {
 
 class _CalculatorAvarageAppState extends State<CalculatorAvarageApp> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  double secilenDeger = 4;
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +41,7 @@ class _CalculatorAvarageAppState extends State<CalculatorAvarageApp> {
                 ),
                 Expanded(
                   flex: 1,
-                  child: Container(
-                    child: Text('Form Buraya Gelecek'),
-                    color: Colors.red,
-                  ),
+                  child: ShowAvarage(lectureCount: 1, avarage: 3.5333),
                 ),
               ],
             ),
@@ -64,7 +66,7 @@ class _CalculatorAvarageAppState extends State<CalculatorAvarageApp> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              IconButton(onPressed: () {}, icon: Icon(Icons.ac_unit_outlined)),
+              _buildHarfler(),
               IconButton(onPressed: () {}, icon: Icon(Icons.ac_unit_outlined)),
               IconButton(onPressed: () {}, icon: Icon(Icons.ac_unit_outlined)),
             ],
@@ -81,6 +83,28 @@ class _CalculatorAvarageAppState extends State<CalculatorAvarageApp> {
         border: OutlineInputBorder(borderRadius: Constants.borderRadius),
         filled: true,
         fillColor: Constants.mainColor.shade100.withOpacity(0.3),
+      ),
+    );
+  }
+
+  _buildHarfler() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: Constants.mainColor.shade100.withOpacity(0.3),
+        borderRadius: Constants.borderRadius,
+      ),
+      child: DropdownButton<double>(
+        value: secilenDeger,
+        elevation: 16,
+        underline: Container(),
+        onChanged: (value) {
+          setState(() {
+            secilenDeger = value!;
+            print(secilenDeger);
+          });
+        },
+        items: DataHelper.tumDerslerinHarfleri(),
       ),
     );
   }
