@@ -1,6 +1,13 @@
+import 'package:dynamic_calculators/model/ders.dart';
 import 'package:flutter/material.dart';
 
 class DataHelper {
+  static List<Ders> tumEklenenDersler = [];
+  
+  static dersEkle(Ders ders) {
+    tumEklenenDersler.add(ders);
+  }
+
   static List<String> _tumDerslerinHarfleri() {
     return ['AA', 'BA', 'BB', 'CB', 'CC', 'DC', 'DD', 'FD', 'FF'];
   }

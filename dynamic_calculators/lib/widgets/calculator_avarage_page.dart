@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:dynamic_calculators/constants/app_constants.dart';
 import 'package:dynamic_calculators/helper/data_helper.dart';
+import 'package:dynamic_calculators/model/ders.dart';
 import 'package:dynamic_calculators/widgets/show_avarage.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +15,10 @@ class CalculatorAvarageApp extends StatefulWidget {
 
 class _CalculatorAvarageAppState extends State<CalculatorAvarageApp> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   double secilenDeger = 4;
+  double secilenKredi = 1;
+  String girilenDersAdi = '';
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +71,12 @@ class _CalculatorAvarageAppState extends State<CalculatorAvarageApp> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildHarfler(),
-              IconButton(onPressed: () {}, icon: Icon(Icons.ac_unit_outlined)),
-              IconButton(onPressed: () {}, icon: Icon(Icons.ac_unit_outlined)),
+              _buildKrediler(),
+              // IconButton(
+              //   onPressed: _dersEkleveOrtalamaHesapla(),
+              //   icon: Icon(Icons.arrow_forward_ios),
+              //   iconSize: 30,
+              // ),
             ],
           ),
         ],
@@ -78,6 +86,18 @@ class _CalculatorAvarageAppState extends State<CalculatorAvarageApp> {
 
   Widget _buildTextFormField() {
     return TextFormField(
+      onSaved: (value) {
+        setState(() {
+          girilenDersAdi = value!;
+        });
+      },
+      validator: (s) {
+        if (s!.length <= 0) {
+          return 'Ders Adını Giriniz';
+        } else {
+          return null;
+        }
+      },
       decoration: InputDecoration(
         hintText: 'Matematik',
         border: OutlineInputBorder(borderRadius: Constants.borderRadius),
@@ -107,5 +127,40 @@ class _CalculatorAvarageAppState extends State<CalculatorAvarageApp> {
         items: DataHelper.tumDerslerinHarfleri(),
       ),
     );
+  }
+
+  _buildKrediler() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: Constants.mainColor.shade100.withOpacity(0.3),
+        borderRadius: Constants.borderRadius,
+      ),
+      child: DropdownButton<double>(
+        value: secilenKredi,
+        elevation: 16,
+        underline: Container(),
+        onChanged: (value) {
+          setState(() {
+            secilenKredi = value!;
+            print("secilenKredi: $value");
+          });
+        },
+        items: DataHelper.tumDerslerinKredileri(),
+      ),
+    );
+  }
+
+
+  _dersEkleveOrtalamaHesapla() {
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      var eklenecekDers = Ders(
+          ad: girilenDersAdi,
+          harfDegeri: secilenDeger,
+          krediDegeri: secilenKredi);
+      DataHelper.dersEkle(eklenecekDers);
+      print(DataHelper.tumEklenenDersler);
+    }
   }
 }
